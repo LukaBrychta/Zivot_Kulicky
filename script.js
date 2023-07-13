@@ -125,7 +125,7 @@ window.onload = function () {
 
             // přepočet skore po snězení
             score++;
-            document.getElementById("skore").textContent = "score " + score;
+            document.getElementById("skore").textContent = "score: " + score;
         }
         if ((ball.x - ball.radius / 1.5 < poisen.x + poisen.radius) && (poisen.x - poisen.radius < ball.x + ball.radius / 1.5)
             && (ball.y - ball.radius / 1.5 < poisen.y + poisen.radius) && (poisen.y - poisen.radius < ball.y + ball.radius / 1.5)) {
@@ -183,7 +183,7 @@ window.onload = function () {
     function changeLevel() {
         if (game) {
             level++;
-            document.getElementById("level").textContent = "level " + level;
+            document.getElementById("level").textContent = "level: " + level;
             ball.move = ball.move + 0.2;
         }
 

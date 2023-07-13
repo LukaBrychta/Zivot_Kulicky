@@ -3,21 +3,25 @@
     margin: 0;
     box-sizing: border-box;
 }
-#level {
-    position: absolute;
-    left: 650px;
-    top: 10px;
-    font-size: 40px;
-    font-weight: bold;
+.container {
+    display: flex;
+    justify-content: center;
 }
-#skore {
-    position: absolute;
-    left: 500px;
-    top: 10px;
+canvas {
+    float: left;
+    padding: 10px;
+}
+p {
     font-size: 40px;
     font-weight: bold;
+    padding: 10px;
+}
+.clear {
+    clear: both;
 }
 #end {
-    font-size: 50px;
+    font-size: 80px;
     font-weight: bold;
+    display: flex;
+    justify-content: center;
 }

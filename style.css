@@ -11,10 +11,11 @@ canvas {
     float: left;
     padding: 10px;
 }
-p {
+.container p {
     font-size: 40px;
     font-weight: bold;
     padding: 10px;
+    width: 180px;
 }
 .clear {
     clear: both;

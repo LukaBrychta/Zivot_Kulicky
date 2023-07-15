@@ -24,9 +24,11 @@ window.onload = function () {
     let food = {
         x: generateRandomPositionX(),
         y: generateRandomPositionY(),
-        radius: 50,
+        radius: 40,
         color: "#2ECC71",
-        time: 0
+        time: 0,
+        moveX: generateMove(),
+        moveY: generateMove()
     }
 
     // jed
@@ -35,7 +37,9 @@ window.onload = function () {
         y: generateRandomPositionY(),
         radius: 5,
         color: "#A93226",
-        time: 0
+        time: 0,
+        moveX: generateMove(),
+        moveY: generateMove()
     }
 
     // překreslení hrací plochy a hlavní cyklus
@@ -52,6 +56,8 @@ window.onload = function () {
             generatePoisen();
             generateFood();
 
+            movePoisen();
+            moveFood();
             moveBall();
             context.beginPath();
             context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
@@ -83,22 +89,46 @@ window.onload = function () {
         if (event.key === "ArrowDown") {
             ball.moveY = + ball.move;
         }
-        moveBall();
     }
 
-    //pohyb kuličky
+    //pohyb kuličky a okraj plochy
     function moveBall() {
         if ((ball.x - ball.radius < 0) || (ball.x + ball.radius > playingArea.width)) {
-            game = false;
+            ball.radius = ball.radius - 10;
         }
         if ((ball.y - ball.radius < 0) || (ball.y + ball.radius > playingArea.height)) {
-            game = false;
+            ball.radius = ball.radius - 10;
         }
         else {
             ball.x = ball.x + ball.moveX;
             ball.y = ball.y + ball.moveY;
         }
+    }
 
+    function movePoisen() {
+        if ((poisen.x - poisen.radius < 0) || (poisen.x + poisen.radius > playingArea.width)) {
+            poisen.moveX = -poisen.moveX;
+        }
+        else if ((poisen.y - poisen.radius < 0) || (poisen.y + poisen.radius > playingArea.height)) {
+            poisen.moveY = -poisen.moveY;
+        }
+        else {
+            poisen.x = poisen.x + poisen.moveX;
+            poisen.y = poisen.y + poisen.moveY;
+        }
+    }
+
+    function moveFood() {
+        if ((food.x - food.radius < 0) || (food.x + food.radius > playingArea.width)) {
+            food.moveX = -food.moveX;
+        }
+        else if ((food.y - food.radius < 0) || (food.y + food.radius > playingArea.height)) {
+            food.moveY = -food.moveY;
+        }
+        else {
+            food.x = food.x + food.moveX;
+            food.y = food.y + food.moveY;
+        }
     }
 
     //změna velikosti objektů
@@ -106,21 +136,23 @@ window.onload = function () {
         if (ball.radius > 1)
             ball.radius = ball.radius - 0.05;
         if (poisen.radius < 500)
-            poisen.radius = poisen.radius + 0.02;
+            poisen.radius = poisen.radius + 0.01;
         if (food.radius > 2)
             food.radius = food.radius - 0.01;
     }
 
-    //snězení jídla nebo jedu kuličkou
+    //snězení jídla nebo jedu kuličkou a generování nových objektů
     function eating() {
         if ((ball.x - ball.radius / 1.5 < food.x + food.radius) && (food.x - food.radius < ball.x + ball.radius / 1.5)
             && (ball.y - ball.radius / 1.5 < food.y + food.radius) && (food.y - food.radius < ball.y + ball.radius / 1.5)) {
             food.x = generateRandomPositionX();
             food.y = generateRandomPositionY();
-            if (ball.radius > 85 && ball.radius < 100) {
+            food.moveX = generateMove();
+            food.moveY = generateMove();
+            if (ball.radius > 90 && ball.radius < 100) {
                 ball.radius = 100;
             }
-            else { ball.radius = ball.radius + 15 };
+            else { ball.radius = ball.radius + 10 };
             food.time = 0;
 
             // přepočet skore po snězení
@@ -131,22 +163,36 @@ window.onload = function () {
             && (ball.y - ball.radius / 1.5 < poisen.y + poisen.radius) && (poisen.y - poisen.radius < ball.y + ball.radius / 1.5)) {
             poisen.x = generateRandomPositionX();
             poisen.y = generateRandomPositionY();
-            if (ball.radius < 15) {
+            poisen.moveX = generateMove();
+            poisen.moveY = generateMove();
+            if (ball.radius < 10) {
                 ball.radius = 1;
+                poisen.time = 0;
             }
-            else { ball.radius = ball.radius - 15 };
+            else { ball.radius = ball.radius - 10 };
             poisen.time = 0;
         }
+
+        // generování po vypršení času
         if (poisen.time > 1000) {
             poisen.x = generateRandomPositionX();
             poisen.y = generateRandomPositionY();
+            poisen.moveX = generateMove();
+            poisen.moveY = generateMove();
             poisen.time = 0;
         }
         if (food.time > 500) {
             food.x = generateRandomPositionX();
             food.y = generateRandomPositionY();
+            food.moveX = generateMove();
+            food.moveY = generateMove();
             food.time = 0;
         }
+    }
+
+
+    function generateMove() {
+        return Math.random() < 0.5 ? -1 : 1;
     }
 
     //generování nového jídla
@@ -177,7 +223,7 @@ window.onload = function () {
     //generování pozice v ose y
     function generateRandomPositionY() {
         return Math.floor(Math.random() * (playingArea.height - 100)) + 50;
-    }5
+    } 5
 
     //změna levelu
     function changeLevel() {
